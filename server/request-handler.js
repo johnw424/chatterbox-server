@@ -21,22 +21,19 @@ exports.handler = function(request, response) {
   headers['Content-Type'] = "text/plain";
 
   var pathName = url.parse(request.url).pathname;
+  var message = JSON.stringify({results: [{username: "Jono", message: "Do my bidding!"}]});
 
-  response.results = [];
-
-  if(request.method === "GET" && pathName === "/classes/room1") {
+  if(request.method === "GET") {
     response.writeHead(200, headers);
-    response.end(JSON.stringify(response.results));
+    response.end(message);
   }
-
-  if(request.method === "POST" && pathName === "/classes/room1") {
-    request.on("data", function(message) {
-      response.results.push(JSON.parse(message));
-    })
+  if(request.method === "POST") {
     response.writeHead(201, headers);
     response.end();
+  }else{
+    response.writeHead(404, headers);
+    response.end();
   }
-};
 
 /* These headers will allow Cross-Origin Resource Sharing (CORS).
  * This CRUCIAL code allows this server to talk to websites that
