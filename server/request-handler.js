@@ -7,7 +7,9 @@
 
 // Require url module to parse url path
 var url = require("url");
-
+var database = {
+  results: []
+};
 exports.handler = function(request, response) {
   /* the 'request' argument comes from nodes http module. It includes info about the
   request - such as what URL the browser is requesting. */
@@ -22,14 +24,20 @@ exports.handler = function(request, response) {
 
   var message = JSON.stringify({results: [{username: "Jono", message: "Do my bidding!"}]});
 
-  if(request.url === '/classes/messages' && request.method === "POST") {
-    response.writeHead(201, headers);
-    response.end();
-  }
   if(request.url === '/classes/messages' && request.method === "GET") {
     response.writeHead(200, headers);
-    response.end(message);
-  }else if(request.url === '/classes/messages' && request.method === "GET"){
+    response.end(JSON.stringify(database));
+  }else if(request.url === '/classes/messages' && request.method === "POST") {
+    var msg = '';
+    request.on('data', function(data){
+      msg += data;
+    })
+    request.on('end', function(){
+      database.results.push(JSON.parse(msg));
+      response.writeHead(201, headers);
+      response.end(JSON.stringify(database.results));
+    })
+  }else{
     response.writeHead(404, headers);
     response.end();
   }
