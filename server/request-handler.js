@@ -5,31 +5,37 @@
  * this file and include it in basic-server.js so that it actually works.
  * *Hint* Check out the node module documentation at http://nodejs.org/api/modules.html. */
 
-exports.handleRequest = function(request, response) {
+// Require url module to parse url path
+var url = require("url");
+
+exports.handler = function(request, response) {
   /* the 'request' argument comes from nodes http module. It includes info about the
   request - such as what URL the browser is requesting. */
 
   /* Documentation for both request and response can be found at
    * http://nodemanual.org/0.8.14/nodejs_ref_guide/http.html */
 
-  console.log("Serving request type " + request.method + " for url " + request.url);
-
-  var statusCode = 200;
-
   /* Without this line, this server wouldn't work. See the note
    * below about CORS. */
   var headers = defaultCorsHeaders;
-
   headers['Content-Type'] = "text/plain";
 
-  /* .writeHead() tells our server what HTTP status code to send back */
-  response.writeHead(statusCode, headers);
+  var pathName = url.parse(request.url).pathname;
 
-  /* Make sure to always call response.end() - Node will not send
-   * anything back to the client until you do. The string you pass to
-   * response.end() will be the body of the response - i.e. what shows
-   * up in the browser.*/
-  response.end("Hello, World!");
+  response.results = [];
+
+  if(request.method === "GET" && pathName === "/classes/room1") {
+    response.writeHead(200, headers);
+    response.end(JSON.stringify(response.results));
+  }
+
+  if(request.method === "POST" && pathName === "/classes/room1") {
+    request.on("data", function(message) {
+      response.results.push(JSON.parse(message));
+    })
+    response.writeHead(201, headers);
+    response.end();
+  }
 };
 
 /* These headers will allow Cross-Origin Resource Sharing (CORS).

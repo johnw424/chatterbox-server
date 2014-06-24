@@ -8,5 +8,16 @@
   "devDependencies": {
     "request": "^2.34.0",
     "chai": "^1.9.0"
-  }
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kryptonitesherpa/2014-06-chatterbox-server.git"
+  },
+  "bugs": {
+    "url": "https://github.com/kryptonitesherpa/2014-06-chatterbox-server/issues"
+  },
+  "homepage": "https://github.com/kryptonitesherpa/2014-06-chatterbox-server"
 }
