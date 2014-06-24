@@ -20,21 +20,21 @@ exports.handler = function(request, response) {
   var headers = defaultCorsHeaders;
   headers['Content-Type'] = "text/plain";
 
-  var pathName = url.parse(request.url).pathname;
   var message = JSON.stringify({results: [{username: "Jono", message: "Do my bidding!"}]});
 
-  if(request.method === "GET") {
-    response.writeHead(200, headers);
-    response.end(message);
-  }
-  if(request.method === "POST") {
+  if(request.url === '/classes/messages' && request.method === "POST") {
     response.writeHead(201, headers);
     response.end();
-  }else{
+  }
+  if(request.url === '/classes/messages' && request.method === "GET") {
+    response.writeHead(200, headers);
+    response.end(message);
+  }else if(request.url === '/classes/messages' && request.method === "GET"){
     response.writeHead(404, headers);
     response.end();
   }
 
+}
 /* These headers will allow Cross-Origin Resource Sharing (CORS).
  * This CRUCIAL code allows this server to talk to websites that
  * are on different domains. (Your chat client is running from a url
